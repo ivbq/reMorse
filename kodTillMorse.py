@@ -26,7 +26,7 @@ def toMorse(command):
             if y in varToBin: binary += '1' + varToBin[x] + varToBin[y]
             else: binary += '0' + varToBin[x] + format(int(y), '0>2b')
         case _:
-            binary = "00000000"
+            binary = "10000000"
     morse = binToMorse[binary[:4]] + ' ' + binToMorse[binary[4:]]
     print(morse)
 
