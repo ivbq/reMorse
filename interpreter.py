@@ -24,11 +24,10 @@ opBin = ["inp", "out", "end", "add/sub", "addi", "subi", "jmp", "jme"]
 morseDic = {"-----": '0', ".----": '1', "..---": '2', "...--": '3', "....-": '4', ".....": '5', "-....": '6', "--...": '7', "---..": '8', "----.": '9', ".-": 'A', "-...": 'B', "-.-.": 'C', "-..": 'D', ".": 'E', "..-.": 'F'}
 
 def morseToBinary(a: str):
-    """Converts from morse code in text to a binary string"""
+    """Converts from morse code in text form to a binary string"""
     x, y = a.split()
-    binX = format(int(morseDic[x], 16), '0>4b')
-    binY = format(int(morseDic[y], 16), '0>4b')
-    return (binX + binY)
+    binX, binY = format(int(morseDic[x], 16), '0>4b'), format(int(morseDic[y], 16), '0>4b')
+    return binX + binY
 
 def evaluate(command: str, debug: bool = False):
     """Evaluates statement, updates variables, and returns relative index of next statement to evaluate"""
@@ -61,7 +60,7 @@ def evaluate(command: str, debug: bool = False):
                 x += y
             else: 
                 if debug: print(f"add {x} + {y}")
-                x += y
+                x -= y
             return 1
         
         case "addi":
