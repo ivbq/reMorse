@@ -30,7 +30,6 @@ def toMorse(command):
     morse = binToMorse[binary[:4]] + ' ' + binToMorse[binary[4:]]
     print(morse)
 
-fn = input("File: ")
 with open("funny_language\code.txt", "r") as source:
     commands: list[str] = source.readlines()
     for line in commands:
