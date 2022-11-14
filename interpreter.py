@@ -25,11 +25,11 @@ opBin = ["inp", "out", "end", "add/sub", "addi", "subi", "jmp", "jme"]
 #morse to hex to bin
 morseDic = {"-----":'0', ".----":'1', "..---":'2', "...--":'3', "....-":'4', ".....":'5', "-....":'6', "--...":'7', "---..":'8', "----.":'9', ".-":'A', "-...":'B', "-.-.":'C', "-..":'D', ".":'E', "..-.":'F'}
 
-
 def morseToBinary(a:str):
     x, y = a.split()
-    deci = int(morseDic[x]+morseDic[y], 16)
-    return format(deci, '0>8b')
+    binX = format(int(morseDic[x], 16), '0>4b')
+    binY = format(int(morseDic[y], 16), '0>4b')
+    return (binX+binY)
 
 
 
@@ -41,7 +41,7 @@ def evaluate(command: str, debug: bool = False):
     binary = morseToBinary(command)
     print(binary)
     op = opBin[int(binary[:3],2)] #tar tre första talen i binary, gör om det till bas 10 och sätter in det i opReg
-
+    
     match op:
         case "inp": #måste vara int
             x = regBin[int(binary[3:5],2)]
@@ -62,20 +62,20 @@ def evaluate(command: str, debug: bool = False):
             x = regBin[int(binary[4:6],2)]
             y = regBin[int(binary[6:8],2)]
 
-            if binary[3] == 1: register[x] -= register[y]
-            else: register[x] += register[y]
+            if binary[3] == 1: register[x] = int(register[x]) - int(register[y])
+            else: register[x] = int(register[x]) + int(register[y])
             return 1
         
         case "addi":
             x = regBin[int(binary[3:5],2)]
             y = int(binary[5:],2)
-            x += y
+            register[x] = int(register[x]) + y
             return 1
 
         case "subi":
             x = regBin[int(binary[3:5],2)]
             y = int(binary[5:],2)
-            x -= y
+            register[x] = int(register[x]) - y
             return 1
 
         case "jmp": #check så att i inte blir negativt
@@ -106,4 +106,4 @@ fn = input("File: ")
 with open(fn, "r") as source:
     commands: list[str] = source.readlines()
     i: int = 0
-    while i < len(commands): i += evaluate(commands[i])
+    while i < len(commands): i += evaluate(commands[i], debug=True)
