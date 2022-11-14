@@ -1,9 +1,7 @@
-inp
-add b a
-inp
+inp a
+inp b
 add c b
-add d 1
+addi d 1
 jme d a
 jmp -3
-set a c
-out
+out c
