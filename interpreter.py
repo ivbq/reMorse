@@ -43,12 +43,9 @@ def evaluate(command: str, debug: bool = False):
     op = opBin[int(binary[:3],2)] #tar tre första talen i binary, gör om det till bas 10 och sätter in det i opReg
 
     match op:
-        case "inp":
-            print("input")
-            print(binary[3:5])
+        case "inp": #måste vara int
             x = regBin[int(binary[3:5],2)]
             if debug: print(f"inp -> {x} = ",end="")
-            print(x)
             register[x] = input()
             return 1
 
@@ -81,7 +78,7 @@ def evaluate(command: str, debug: bool = False):
             x -= y
             return 1
 
-        case "jmp":
+        case "jmp": #check så att i inte blir negativt
             x = int(binary[4:],2)
             if binary[3] == 1: x = -x
             return x
