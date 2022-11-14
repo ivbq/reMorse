@@ -7,6 +7,25 @@
 # jmp(x): Jump back x spaces
 
 register = {'a': 0, 'b': 0, 'c': 0, 'd': 0}
+operationReg = ["add", ""]
+
+#morse to hex to bin
+morseDic = {"-----":'0', ".----":'1', "..---":'2', "...--":'3', "....-":'4', ".....":'5', "-....":'6', "--...":'7', "---..":'8', "----.":'9', ".-":'A', "-...":'B', "-.-.":'C', "-..":'D', ".":'E', "..-.":'F'}
+
+
+def morseToBinary(a:str):
+    x, y = a.split()
+    deci = int(morseDic[x]+morseDic[y], 16)
+    return format(deci, '0>8b')
+
+morse = input()
+binary = morseToBinary(morse)
+print(binary)
+
+op = int(binary[:3],2)
+
+
+
 
 def evaluate(command: str, debug: bool = False):
     """Evaluates statement, updates variables, and returns relative index of next statement to evaluate"""
