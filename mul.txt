@@ -1,0 +1,9 @@
+inp
+add b a
+inp
+add c b
+add d 1
+jme d a
+jmp -3
+set a c
+out

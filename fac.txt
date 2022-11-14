@@ -1,0 +1,14 @@
+inp
+set b 1
+set d a
+add c b 
+sub d 1
+jme d 0
+jmp -3
+set b c
+set c 0
+sub a 1
+jme a 1
+jmp -9
+set a b
+out
