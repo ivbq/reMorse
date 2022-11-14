@@ -23,16 +23,15 @@ def toMorse(command):
             else: binary += '0' + format(int(x), '0>4b')
         case ["jme", x, y]: #help
             binary = "111"
-            if y in varToBin: binary += '1' + varToBin(x) + varToBin(y)
-            else: binary += '0' + varToBin(x) + format(int(y), '0>2b')
+            if y in varToBin: binary += '1' + varToBin[x] + varToBin[y]
+            else: binary += '0' + varToBin[x] + format(int(y), '0>2b')
         case _:
             binary = "00000000"
-    print(binary[:4] + ' ' + binary[4:])
     morse = binToMorse[binary[:4]] + ' ' + binToMorse[binary[4:]]
     print(morse)
 
 fn = input("File: ")
-with open(fn, "r") as source:
+with open("funny_language\code.txt", "r") as source:
     commands: list[str] = source.readlines()
     for line in commands:
         toMorse(line)
