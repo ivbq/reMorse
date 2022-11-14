@@ -6,15 +6,15 @@
 # jme(x, y): Skip next line if x = y
 # jmp(x): Jump back x spaces
 
-#nummer -1 för array
-#0 000 input                  3bit op + 2bit var                           5bit
-#1 001 output                 3bit op + 2bit var                           5bit
-#2 010 end                    3bit op                                      3bit
-#3 011 add/sub (op+ /op-  ?)  3bit op + 1bit (+/-) + 2bit var  + 2bit var  8bit
-#4 100 addi                   3bit op + 2bit var   + 5bit (32)             8bit
-#5 101 subi                   3bit op + 2bit var   + 5bit (32)             8bit
-#6 110 jmp                    3bit op + 1bit (+/-) + 4bit (16)             8bit
-#7 111 jme                    3bit op + 2bit var   + 2bit var              7bit
+#nummer -1 för array          när det är (x/y) är x = 0 och y = 1
+#0 000 input                  3bit op + 2bit var                               5bit
+#1 001 output                 3bit op + 2bit var                               5bit
+#2 010 end                    3bit op                                          3bit
+#3 011 add/sub (op+ /op-  ?)  3bit op + 1bit (+/-)     + 2bit var  + 2bit var  8bit
+#4 100 addi                   3bit op + 2bit var       + 3bit (8)              8bit
+#5 101 subi                   3bit op + 2bit var       + 3bit (8)              8bit
+#6 110 jmp                    3bit op + 1bit (+/-)     + 4bit (16)             8bit
+#7 111 jme                    3bit op + 1bit (imm/var) + 2bit var  + 2bit      8bit
 
 
 
@@ -31,9 +31,6 @@ def morseToBinary(a:str):
     deci = int(morseDic[x]+morseDic[y], 16)
     return format(deci, '0>8b')
 
-morse = input()
-binary = morseToBinary(morse)
-print(binary)
 
 
 
@@ -41,36 +38,68 @@ print(binary)
 
 def evaluate(command: str, debug: bool = False):
     """Evaluates statement, updates variables, and returns relative index of next statement to evaluate"""
+    binary = morseToBinary(command)
+    print(binary)
     op = opBin[int(binary[:3],2)] #tar tre första talen i binary, gör om det till bas 10 och sätter in det i opReg
-    rest = binary[5:]
+
     match op:
-        case "add/sub":
-            xv, yv = int(register[x]), int(register[y]) if y in register else int(y)
-            if debug: print(f"add {x} {y} -> {x} = {xv + yv}")
-            register[x] = xv + yv
-            return 1
-            #sub
-            #xv, yv = int(register[x]), int(register[y]) if y in register else int(y)
-            #if debug: print(f"sub {x} {y} -> {x} = {xv - yv}")
-            #register[x] = xv - yv
-            #return 1
-        case "jme":
-            xv, yv = int(register[x]), int(register[y]) if y in register else int(y)
-            if debug: print(f"jme {x} {y} -> {xv == yv}")
-            if xv == yv: return 2
-            else: return 1
-        case "jmp":
-            xv = int(x)
-            if debug: print(f"jmp {x}")
-            return xv
         case "inp":
+            print("input")
+            print(binary[3:5])
+            x = regBin[int(binary[3:5],2)]
             if debug: print(f"inp -> {x} = ",end="")
+            print(x)
             register[x] = input()
             return 1
+
         case "out":
+            x = regBin[int(binary[3:5],2)]
             if debug: print(f"out -> ",end="")
             print(register[x])
             return 1
+
+        case "end": #good enough
+            return 100
+        
+        case "add/sub":
+            x = regBin[int(binary[4:6],2)]
+            y = regBin[int(binary[6:8],2)]
+
+            if binary[3] == 1: register[x] -= register[y]
+            else: register[x] += register[y]
+            return 1
+        
+        case "addi":
+            x = regBin[int(binary[3:5],2)]
+            y = int(binary[5:],2)
+            x += y
+            return 1
+
+        case "subi":
+            x = regBin[int(binary[3:5],2)]
+            y = int(binary[5:],2)
+            x -= y
+            return 1
+
+        case "jmp":
+            x = int(binary[4:],2)
+            if binary[3] == 1: x = -x
+            return x
+
+        case "jme":
+            x = regBin[int(binary[4:6],2)]
+            y = int(binary[6:8],2)
+
+            if binary[3] == 1: y = register[regBin[y]] #variabel
+
+            if x == y: return 2
+            else: return 1
+
+            #xv, yv = int(register[x]), int(register[y]) if y in register else int(y)
+            #if debug: print(f"jme {x} {y} -> {xv == yv}")
+            #if xv == yv: return 2
+            #else: return 1
+        
             
         case _:
             if debug: print(f"Line not evaluated")
