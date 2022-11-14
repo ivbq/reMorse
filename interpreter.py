@@ -80,8 +80,8 @@ def evaluate(command: str, debug: bool = False):
 
         case "jmp": #check så att i inte blir negativt
             x = int(binary[4:],2)
-            if binary[3] == 1: x = -x
-            return x
+            if binary[3] == 1: return -x
+            else: return x
 
         case "jme":
             x = regBin[int(binary[4:6],2)]
