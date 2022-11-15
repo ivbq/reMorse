@@ -57,10 +57,10 @@ def evaluate(command: str, debug: bool = False):
 
             if binary[3] == '1': 
                 if debug: print(f"sub {x} - {y}")
-                x += y
+                x -= y
             else: 
                 if debug: print(f"add {x} + {y}")
-                x -= y
+                x += y
             return 1
         
         case "addi":
@@ -88,7 +88,7 @@ def evaluate(command: str, debug: bool = False):
             y = int(binary[6:], 2)
 
             if binary[3] == '1': y = register[regBin[y]] #variabel
-            if int(x) == int(y):
+            if x == y:
                 if debug: print(f"equal: {x} och {y}")
                 input()
                 return 2
@@ -96,11 +96,6 @@ def evaluate(command: str, debug: bool = False):
                 if debug: print(f"not equal: {x} och {y}")
                 input()
                 return 1
-
-            #xv, yv = int(register[x]), int(register[y]) if y in register else int(y)
-            #if debug: print(f"jme {x} {y} -> {xv == yv}")
-            #if xv == yv: return 2
-            #else: return 1
 
         case _:
             if debug: print(f"Line not evaluated")
