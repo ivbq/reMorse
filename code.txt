@@ -1,7 +1,15 @@
 inp a
-inp b
+addi b 1
+sub d d
+add d a
 add c b
-addi d 1
-jme d a
+subi d 1
+jme d 0
 jmp -3
-out c
+sub b b
+add b c
+sub c c
+subi a 1
+jme a 0
+jmp -11
+out b
