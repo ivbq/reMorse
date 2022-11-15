@@ -1,5 +1,8 @@
 from morse_audio_decoder.morse import MorseCode
+binToMorse = {'0': "-----", '1': ".----", '2': "..---", '3': "...--", '4': "....-", '5': ".....", '6': "-....", '7': "--...", '8': "---..", '9': "----.", 'A': ".-", 'B': "-...", 'C': "-.-.", 'D': "-..", 'E': ".", 'F': "..-."}
 
-morse_code = MorseCode.from_wavfile("morse.wav")
+fileName = input("File: ")
+morse_code = MorseCode.from_wavfile(fileName)
 out = morse_code.decode()
-print(out)
+outStr = ''.join(list(map(lambda x: binToMorse[x] + " ", out)))
+print(outStr)
