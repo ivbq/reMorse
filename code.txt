@@ -1,4 +1,4 @@
-inp a
+inp a    
 addi b 1
 sub d d
 add d a

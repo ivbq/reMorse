@@ -1,3 +1,5 @@
+from morse_audio_decoder.morse import MorseCode
+
 # Variables (2 bits)
 # Operations (3 bits) 
 # Immediates (2-3 bits)
@@ -21,18 +23,24 @@ regBin = ['a', 'b', 'c', 'd']
 opBin = ["inp", "out", "end", "add/sub", "addi", "subi", "jmp", "jme"]
 
 #morse to hex to bin
-morseDic = {"-----": '0', ".----": '1', "..---": '2', "...--": '3', "....-": '4', ".....": '5', "-....": '6', "--...": '7', "---..": '8', "----.": '9', ".-": 'A', "-...": 'B', "-.-.": 'C', "-..": 'D', ".": 'E', "..-.": 'F'}
+morseToHex = {"-----": '0', ".----": '1', "..---": '2', "...--": '3', "....-": '4', ".....": '5', "-....": '6', "--...": '7', "---..": '8', "----.": '9', ".-": 'A', "-...": 'B', "-.-.": 'C', "-..": 'D', ".": 'E', "..-.": 'F'}
+hexToMorse = {'0': "-----", '1': ".----", '2': "..---", '3': "...--", '4': "....-", '5': ".....", '6': "-....", '7': "--...", '8': "---..", '9': "----.", 'A': ".-", 'B': "-...", 'C': "-.-.", 'D': "-..", 'E': ".", 'F': "..-."}
 
+def audioToMorse(fn: str):
+    """Converts from hexadecimal morse code in audio to binary morse code in string form"""
+    morse = MorseCode.from_wavfile(fn)
+    for symbol in morse.decode(): out += hexToMorse[symbol] + " "
+    print(out)
+    
 def morseToBinary(a: str):
-    """Converts from morse code in text form to a binary string"""
+    """Converts from binary morse code in text form to a binary string"""
     x, y = a.split()
-    binX, binY = format(int(morseDic[x], 16), '0>4b'), format(int(morseDic[y], 16), '0>4b')
+    binX, binY = format(int(morseToHex[x], 16), '0>4b'), format(int(morseToHex[y], 16), '0>4b')
     return binX + binY
 
-def evaluate(command: str, debug: bool = False):
+def evaluate(binary: str, debug: bool = False):
     """Evaluates statement, updates variables, and returns relative index of next statement to evaluate"""
-    binary = morseToBinary(command)
-    print(binary)
+    
     op = opBin[int(binary[:3],2)] #tar tre första talen i binary, gör om det till bas 10 och sätter in det i opReg
 
     match op:
@@ -94,16 +102,23 @@ def evaluate(command: str, debug: bool = False):
             return 1
 
 fn = input("File: ")
-with open(fn, "r") as source:
-    commands: list[str] = source.read().split()
-    morsePair: list[str] = []
+if fn[-3:] == "txt":
+    with open(fn, "r") as source:
+        commands: list[str] = source.read().split()
+        morsePair: list[str] = []
 
-    i: int = 0
-    while i < len(commands):
-        morsePair.append(commands[i] + " " + commands[i + 1])
-        i += 2
+        i: int = 0
+        while i < len(commands):
+            morsePair.append(morseToBinary(commands[i] + " " + commands[i + 1]))
+            i += 2
 
-    j: int = 0
-    while j < len(morsePair):
-        print(morsePair[j]+ " = ", end="")
-        j += evaluate(morsePair[j], debug=True)
+        j: int = 0
+        while j < len(morsePair):
+            print(morsePair[j]+ " = ", end="")
+            j += evaluate(morsePair[j], debug=True)
+elif fn[-3:] == "wav":
+    audioToMorse[fn]
+    
+    commands: list[str] = []
+    for symbol in source.read(): # ska egentligen inte vara source.read()
+        commands.append(format(int(symbol, 16), '0>4b'))
