@@ -28,9 +28,16 @@ hexToMorse = {'0': "-----", '1': ".----", '2': "..---", '3': "...--", '4': "....
 
 def audioToMorse(fn: str):
     """Converts from hexadecimal morse code in audio to binary morse code in string form"""
-    morse = MorseCode.from_wavfile(fn)
-    for symbol in morse.decode(): out += hexToMorse[symbol] + " "
-    print(out)
+    morse: MorseCode = MorseCode.from_wavfile(fn)
+    hexBytes: str = morse.decode()
+    instructions: list[str] = []
+
+    for byte in hexBytes:
+        binX, binY = format(int(byte, 16), '0>4b'), format(int(byte, 16), '0>4b')
+        print(f"{binX} {binY}")
+        instructions += f"{binX} {binY}"
+
+    return instructions
     
 def morseToBinary(a: str):
     """Converts from binary morse code in text form to a binary string"""
@@ -105,20 +112,22 @@ fn = input("File: ")
 if fn[-3:] == "txt":
     with open(fn, "r") as source:
         commands: list[str] = source.read().split()
-        morsePair: list[str] = []
+        instructions: list[str] = []
 
         i: int = 0
         while i < len(commands):
-            morsePair.append(morseToBinary(commands[i] + " " + commands[i + 1]))
+            instructions.append(morseToBinary(commands[i] + " " + commands[i + 1]))
             i += 2
 
         j: int = 0
-        while j < len(morsePair):
-            print(morsePair[j]+ " = ", end="")
-            j += evaluate(morsePair[j], debug=True)
+        while j < len(instructions):
+            print(instructions[j]+ " = ", end="")
+            j += evaluate(instructions[j], debug=True)
 elif fn[-3:] == "wav":
-    audioToMorse[fn]
-    
-    commands: list[str] = []
-    for symbol in source.read(): # ska egentligen inte vara source.read()
-        commands.append(format(int(symbol, 16), '0>4b'))
+    instructions: list[str] = []
+    instructions = audioToMorse(fn)
+
+    j: int = 0
+    while j < len(instructions):
+        print(instructions[j]+ " = ", end="")
+        j += evaluate(instructions[j], debug=True)
