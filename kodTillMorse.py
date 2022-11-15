@@ -36,3 +36,4 @@ with open("funny_language/code.txt", "r") as source:
     for line in commands:
         toMorse(line)
     print()
+    print()
