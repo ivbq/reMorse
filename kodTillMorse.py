@@ -1,4 +1,4 @@
-binToMorse = {'0000': "-----", '0001': ".----", '0010': "..---", '0011': "...--", '0100': "....-", '0101': ".....", '0110': "-....", '0111': "--...", '1000': "---..", '1001': "----.", '1010': ".-", '1011': "-...", '1100': "-.-.", '1101': "-..", '1110': ".", '1111': "..-."}
+binToMorse = {'0000': "-----", '0001': ".----", '0010': "..---", '0011': "...--", '0100': "....-", '0101': ".....", '0110': "-....", '0111': "--...", '1000': "---..", '1001': "----.", '1010': ".-", '1011': "-...", '1100': "-.-.", '1101': "-..", '1110': ".", '1111': "..-.", 'skip':""}
 varToBin = {'a': "00", 'b': "01", 'c': "10", 'd': "11"}
 
 def toMorse(command):
@@ -26,11 +26,13 @@ def toMorse(command):
             if y in varToBin: binary += '1' + varToBin[x] + varToBin[y]
             else: binary += '0' + varToBin[x] + format(int(y), '0>2b')
         case _:
-            binary = "10000000"
+            binary = "skipskip"
     morse = binToMorse[binary[:4]] + ' ' + binToMorse[binary[4:]]
-    print(morse)
+    print(morse + " ", end="")
 
-with open("funny_language\code.txt", "r") as source:
+with open("funny_language/code.txt", "r") as source:
     commands: list[str] = source.readlines()
+    print()
     for line in commands:
         toMorse(line)
+    print()

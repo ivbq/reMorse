@@ -34,75 +34,76 @@ def evaluate(command: str, debug: bool = False):
     binary = morseToBinary(command)
     print(binary)
     op = opBin[int(binary[:3],2)] #tar tre första talen i binary, gör om det till bas 10 och sätter in det i opReg
-    
+
     match op:
         case "inp": #måste vara int
             x = regBin[int(binary[3:5], 2)]
-            if debug: print(f"inp -> {x} = ",end="")
+            print(f"inp -> {x} = ",end="")
             register[x] = int(input())
             return 1
-
         case "out":
             x = regBin[int(binary[3:5], 2)]
             if debug: print(f"out {x} -> ",end="")
             print(register[x])
             return 1
-
         case "end": #good enough
-            return 1000000
-        
+            return 1000000 
         case "add/sub":
-            x = register[regBin[int(binary[4:6], 2)]]
-            y = register[regBin[int(binary[6:], 2)]]
-
+            x = regBin[int(binary[4:6], 2)]
+            y = regBin[int(binary[6:], 2)]
             if binary[3] == '1': 
-                if debug: print(f"sub {x} - {y}")
-                x -= y
+                if debug: print(f"sub {x} ({register[x]}) - {y} ({register[y]})")
+                register[x] -= register[y]
             else: 
                 if debug: print(f"add {x} + {y}")
-                x += y
+                register[x] += register[y]
             return 1
-        
         case "addi":
             x = regBin[int(binary[3:5], 2)]
             y = int(binary[5:], 2)
-            register[x] = int(register[x]) + y
+            register[x] += y
             if debug: print(f"addi {x} + {y}")
             return 1
-
         case "subi":
             x = regBin[int(binary[3:5], 2)]
             y = int(binary[5:],2)
-            register[x] = int(register[x]) - y
+            register[x] -= y
             if debug: print(f"subbi {x} - {y}")
             return 1
-
         case "jmp": #check så att i inte blir negativt
             x = int(binary[4:], 2)
             if binary[3] == '1': x = -x
             if debug: print(f"jmp {x}")
             return x
-
         case "jme":
             x = register[regBin[int(binary[4:6],2)]]
             y = int(binary[6:], 2)
-
             if binary[3] == '1': y = register[regBin[y]] #variabel
             if x == y:
-                if debug: print(f"equal: {x} och {y}")
-                input()
+                if debug: 
+                    print(f"equal: {x} och {y}")
+                    input()
                 return 2
             else: 
-                if debug: print(f"not equal: {x} och {y}")
-                input()
+                if debug: 
+                    print(f"not equal: {x} och {y}")
+                    input()
                 return 1
-
         case _:
             if debug: print(f"Line not evaluated")
             return 1
 
 fn = input("File: ")
 with open(fn, "r") as source:
-    commands: list[str] = source.readlines()
+    commands: list[str] = source.read().split()
+    morsePair: list[str] = []
+
     i: int = 0
-    while i < len(commands): i += evaluate(commands[i], debug=True)
+    while i < len(commands):
+        morsePair.append(commands[i] + " " + commands[i + 1])
+        i += 2
+
+    j: int = 0
+    while j < len(morsePair):
+        print(morsePair[j]+ " = ", end="")
+        j += evaluate(morsePair[j], debug=True)
