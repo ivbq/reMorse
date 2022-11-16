@@ -1,4 +1,4 @@
-välkommen till dokumentation som är i princip omöjlig att skriva i om du inte förstår dokumentation
+# Funny language
 
 Först och främst måste man veta att varje instruktion är uppdelade i 2 morse kod commands där varje 
 command står för ett hexadecimalt nummer mellan 0 och F.
@@ -11,12 +11,12 @@ De tre första bitarna är alltid avsett till vilken operation man gör.
 
 ## De olika variablerna och deras binära form
 
-|registry|binary|
-|--------|------|
-| a      | 00   |
-| b      | 01   |
-| c      | 10   |
-| d      | 11   |
+| registry | binary |
+|----------|--------|
+| a        | 00     |
+| b        | 01     |
+| c        | 10     |
+| d        | 11     |
 
 
 ## Konverteringstabell mellan assemblyish och binära instruktioner
@@ -31,9 +31,6 @@ De tre första bitarna är alltid avsett till vilken operation man gör.
 | 8    | 101  | subi    | op  | op  | op  | var | var | imm | imm | imm |
 | 8    | 110  | jmp     | op  | op  | op  | sgn | imm | imm | imm | imm |
 | 8    | 111  | jme     | op  | op  | op  | i/v | var | var | i/v | i/v |
-
-
-
 
 Nedan är alla operationer, vad de gör och vad mer man behöver skriva efter operationen.
 
