@@ -1,5 +1,8 @@
 inp a
 inp b
+jme a 0
+jmp 2
+jmp 5
 add c b
 addi d 1
 jme d a

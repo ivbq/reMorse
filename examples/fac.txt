@@ -1,5 +1,8 @@
 inp a
 addi b 1
+jme a 0
+jmp 2
+jmp 13
 sub d d
 add d a
 add c b
@@ -10,6 +13,6 @@ sub b b
 add b c
 sub c c
 subi a 1
-jme a 1
+jme a 0
 jmp -11
 out b

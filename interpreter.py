@@ -13,9 +13,9 @@ from morse_audio_decoder.morse import MorseCode
 #1 001 output                 3bit op + 2bit var                               5bit
 #2 010 end                    3bit op                                          3bit
 #3 011 add/sub (op+ /op-  ?)  3bit op + 1bit (+/-)     + 2bit var  + 2bit var  8bit
-#4 100 addi                   3bit op + 2bit var       + 3bit (8)              8bit
-#5 101 subi                   3bit op + 2bit var       + 3bit (8)              8bit
-#6 110 jmp                    3bit op + 1bit (+/-)     + 4bit (16)             8bit
+#4 100 addi                   3bit op + 2bit var       + 3bit (7)              8bit
+#5 101 subi                   3bit op + 2bit var       + 3bit (7)              8bit
+#6 110 jmp                    3bit op + 1bit (+/-)     + 4bit (15)             8bit
 #7 111 jme                    3bit op + 1bit (imm/var) + 2bit var  + 2bit      8bit
 
 register = {'a': 0, 'b': 0, 'c': 0, 'd': 0}
@@ -25,8 +25,8 @@ opBin = ["inp", "out", "end", "add/sub", "addi", "subi", "jmp", "jme"]
 #morse to hex to bin
 morseToHex = {"-----": '0', ".----": '1', "..---": '2', "...--": '3', "....-": '4', ".....": '5', "-....": '6', "--...": '7', "---..": '8', "----.": '9', ".-": 'A', "-...": 'B', "-.-.": 'C', "-..": 'D', ".": 'E', "..-.": 'F'}
 hexToMorse = {'0': "-----", '1': ".----", '2': "..---", '3': "...--", '4': "....-", '5': ".....", '6': "-....", '7': "--...", '8': "---..", '9': "----.", 'A': ".-", 'B': "-...", 'C': "-.-.", 'D': "-..", 'E': ".", 'F': "..-."}
-
-error = False
+brailleToMorse = {'⠁': "-----", '⠃': ".----", '⠉': "..---", '⠙': "...--", '⠑': "....-", '⠋': ".....", '⠛': "-....", '⠓': "--...", '⠊': "---..", '⠚': "----.", '⠅': ".-", '⠇': "-...", '⠍': "-.-.", '⠝': "-..", '⠕': ".", '⠏': "..-."}
+#⠁⠃⠉⠙⠑⠋⠛⠓⠊⠚⠅⠇⠍⠝⠕⠏
 
 def audioToMorse(fn: str):
     """Converts from hexadecimal morse code in audio to binary morse code in string form"""
@@ -36,7 +36,6 @@ def audioToMorse(fn: str):
     n = 0
     while n < len(hexBytes):
         binX, binY = format(int(hexBytes[n], 16), '0>4b'), format(int(hexBytes[n + 1], 16), '0>4b')
-        print(f"{binX} {binY}")
         instructions.append(binX + binY)
         n += 2
 
@@ -56,7 +55,6 @@ def evaluate(binary: str, debug: bool = False):
     match op:
         case "inp": #måste vara int
             x = regBin[int(binary[3:5], 2)]
-            print(f"inp -> {x} = ",end="")
             register[x] = int(input())
             return 1
         case "out":
@@ -111,14 +109,20 @@ def evaluate(binary: str, debug: bool = False):
             if debug: print(f"Line not evaluated")
             return 1
 
+# Reads file and interprets instructions
+error = False
+braille = False
 fn = input("File: ")
 if fn[-3:] == "txt":
     with open(fn, "r") as source:
         commands: list[str] = source.read().split()
         instructions: list[str] = []
+        
+        if commands[0] in brailleToMorse: braille = True
 
         if len(commands)%2 != 0:
             print("Error: Needs to be an even number of morse code commands\n")
+            error = True
         else:
             i: int = 0
             while i < len(commands):
@@ -131,14 +135,18 @@ if fn[-3:] == "txt":
                     error = True
                     break
                 else:
+                    if braille: 
+                        commands[i] = brailleToMorse[commands[i]]
+                        commands[i+1] = brailleToMorse[commands[i+1]]
                     instructions.append(morseToBinary(commands[i] + " " + commands[i + 1]))
                     i += 2
                 
-            if not error:
-                j: int = 0
-                while j < len(instructions):
-                    print(instructions[j]+ " = ", end="")
-                    j += evaluate(instructions[j], debug=True)
+        if not error:
+            j: int = 0
+            while j < len(instructions):
+                if j < 0: j = 0
+                j += evaluate(instructions[j])
+                
 elif fn[-3:] == "wav":
     instructions: list[str] = []
     instructions = audioToMorse(fn)
@@ -146,5 +154,4 @@ elif fn[-3:] == "wav":
     j: int = 0
     while j < len(instructions):
         if j < 0: j = 0
-        print(instructions[j]+ " = ", end="")
-        j += evaluate(instructions[j], debug=True)
+        j += evaluate(instructions[j])
