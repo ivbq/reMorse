@@ -126,12 +126,12 @@ if fn[-3:] == "txt":
         else:
             i: int = 0
             while i < len(commands):
-                if commands[i] not in morseToHex:
-                    print("Error: Unknown command: " + commands[i] + f" at command number {i+1}\n       accepted commands are morse code equivalents of 0-9 and A-F\n")
+                if commands[i] not in morseToHex and commands[i] not in brailleToMorse:
+                    print("Error: Unknown command: " + commands[i] + f" at command number {i+1}\n       accepted commands are morse code equivalents of 0-9 and A-F or A-P in braille\n")
                     error = True
                     break
-                elif commands[i+1] not in morseToHex:
-                    print("Error: Unknown command: " + commands[i+1] + f" at command number{i+2}\n       accepted commands are morse code equivalents of 0-9 and A-F\n")
+                elif commands[i+1] not in morseToHex and commands[i+1] not in brailleToMorse:
+                    print("Error: Unknown command: " + commands[i+1] + f" at command number{i+2}\n       accepted commands are morse code equivalents of 0-9 and A-F or A-P in braille\n")
                     error = True
                     break
                 else:

@@ -1,3 +1,4 @@
+morseToBraille = {"-----": '⠁', ".----": '⠃', "..---": '⠉', "...--": '⠙', "....-": '⠑', ".....": '⠋', "-....": '⠛', "--...": '⠓', "---..": '⠊', "----.": '⠚', ".-": '⠅', "-...": '⠇', "-.-.": '⠍', "-..": '⠝', ".": '⠕', "..-.": '⠏'}
 binToMorse = {'0000': "-----", '0001': ".----", '0010': "..---", '0011': "...--", '0100': "....-", '0101': ".....", '0110': "-....", '0111': "--...", '1000': "---..", '1001': "----.", '1010': ".-", '1011': "-...", '1100': "-.-.", '1101': "-..", '1110': ".", '1111': "..-.", 'skip':""}
 varToBin = {'a': "00", 'b': "01", 'c': "10", 'd': "11"}
 
@@ -28,14 +29,18 @@ def toMorse(command, braille = False):
             else: binary += '0' + varToBin[x] + format(int(y), '0>2b')
         case _:
             binary = "skipskip"
-
-    morse = binToMorse[binary[:4]] + ' ' + binToMorse[binary[4:]]
+    com1 = binToMorse[binary[:4]]
+    com2 = binToMorse[binary[4:]]
+    if braille:
+        com1 = morseToBraille[com1]
+        com2 = morseToBraille[com2]
+    morse = com1 + ' ' + com2
     print(morse + " ", end="")
 
 with open("examples/fac.txt", "r") as source:
     commands: list[str] = source.readlines()
     print()
     for line in commands:
-        toMorse(line)
+        toMorse(line, braille = True)
     print()
     print()
