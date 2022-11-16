@@ -1,4 +1,4 @@
-#from morse_audio_decoder.morse import MorseCode
+from morse_audio_decoder.morse import MorseCode
 
 # Variables (2 bits)
 # Operations (3 bits) 
