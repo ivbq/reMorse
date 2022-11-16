@@ -110,7 +110,7 @@ def evaluate(binary: str, debug: bool = False):
             if debug: print(f"Line not evaluated")
             return 1
 
-fn = "examples\invalidCommand.txt" + input("File: ")
+fn = input("File: ")
 if fn[-3:] == "txt":
     with open(fn, "r") as source:
         commands: list[str] = source.read().split()
