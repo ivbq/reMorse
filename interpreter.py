@@ -117,7 +117,7 @@ if fn[-3:] == "txt":
         instructions: list[str] = []
 
         if len(commands)%2 != 0:
-            print("Error: needs to be an even number of morse code commands\n")
+            print("Error: Needs to be an even number of morse code commands\n")
         else:
             i: int = 0
             while i < len(commands):
