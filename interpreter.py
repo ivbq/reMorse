@@ -32,12 +32,13 @@ def audioToMorse(fn: str):
     """Converts from hexadecimal morse code in audio to binary morse code in string form"""
     morse: MorseCode = MorseCode.from_wavfile(fn)
     hexBytes: str = morse.decode()
-    instructions: list[str] = []
 
-    for byte in hexBytes:
-        binX, binY = format(int(byte, 16), '0>4b'), format(int(byte, 16), '0>4b')
+    n = 0
+    while n < len(hexBytes):
+        binX, binY = format(int(hexBytes[n], 16), '0>4b'), format(int(hexBytes[n + 1], 16), '0>4b')
         print(f"{binX} {binY}")
-        instructions += f"{binX} {binY}"
+        instructions.append(f"{binX} {binY}")
+        n += 2
 
     return instructions
     
