@@ -37,7 +37,7 @@ def audioToMorse(fn: str):
     while n < len(hexBytes):
         binX, binY = format(int(hexBytes[n], 16), '0>4b'), format(int(hexBytes[n + 1], 16), '0>4b')
         print(f"{binX} {binY}")
-        instructions.append(f"{binX} {binY}")
+        instructions.append(binX + binY)
         n += 2
 
     return instructions
