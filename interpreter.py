@@ -1,4 +1,4 @@
-from morse_audio_decoder.morse import MorseCode
+#from morse_audio_decoder.morse import MorseCode
 
 # Variables (2 bits)
 # Operations (3 bits) 
@@ -25,6 +25,8 @@ opBin = ["inp", "out", "end", "add/sub", "addi", "subi", "jmp", "jme"]
 #morse to hex to bin
 morseToHex = {"-----": '0', ".----": '1', "..---": '2', "...--": '3', "....-": '4', ".....": '5', "-....": '6', "--...": '7', "---..": '8', "----.": '9', ".-": 'A', "-...": 'B', "-.-.": 'C', "-..": 'D', ".": 'E', "..-.": 'F'}
 hexToMorse = {'0': "-----", '1': ".----", '2': "..---", '3': "...--", '4': "....-", '5': ".....", '6': "-....", '7': "--...", '8': "---..", '9': "----.", 'A': ".-", 'B': "-...", 'C': "-.-.", 'D': "-..", 'E': ".", 'F': "..-."}
+
+error = False
 
 def audioToMorse(fn: str):
     """Converts from hexadecimal morse code in audio to binary morse code in string form"""
@@ -108,26 +110,40 @@ def evaluate(binary: str, debug: bool = False):
             if debug: print(f"Line not evaluated")
             return 1
 
-fn = input("File: ")
+fn = "examples\invalidCommand.txt" + input("File: ")
 if fn[-3:] == "txt":
     with open(fn, "r") as source:
         commands: list[str] = source.read().split()
         instructions: list[str] = []
 
-        i: int = 0
-        while i < len(commands):
-            instructions.append(morseToBinary(commands[i] + " " + commands[i + 1]))
-            i += 2
-
-        j: int = 0
-        while j < len(instructions):
-            print(instructions[j]+ " = ", end="")
-            j += evaluate(instructions[j], debug=True)
+        if len(commands)%2 != 0:
+            print("Error: needs to be an even number of morse code commands\n")
+        else:
+            i: int = 0
+            while i < len(commands):
+                if commands[i] not in morseToHex:
+                    print("Error: Unknown command: " + commands[i] + f" at command number {i+1}\n       accepted commands are morse code equivalents of 0-9 and A-F\n")
+                    error = True
+                    break
+                elif commands[i+1] not in morseToHex:
+                    print("Error: Unknown command: " + commands[i+1] + f" at command number{i+2}\n       accepted commands are morse code equivalents of 0-9 and A-F\n")
+                    error = True
+                    break
+                else:
+                    instructions.append(morseToBinary(commands[i] + " " + commands[i + 1]))
+                    i += 2
+                
+            if not error:
+                j: int = 0
+                while j < len(instructions):
+                    print(instructions[j]+ " = ", end="")
+                    j += evaluate(instructions[j], debug=True)
 elif fn[-3:] == "wav":
     instructions: list[str] = []
     instructions = audioToMorse(fn)
 
     j: int = 0
     while j < len(instructions):
+        if j < 0: j = 0
         print(instructions[j]+ " = ", end="")
         j += evaluate(instructions[j], debug=True)
