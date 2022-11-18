@@ -12,6 +12,7 @@ reMorse är ett språk med 8-bitars instruktioner och 32-bitars register som är
 - 101 Subi: Subi är en instruktion som tar in ett register x och en immediate imm mellan 0 och 2^3 - 1 och sparar värdet av (x - imm) i x.
 - 110 Jump (jmp): Jump är en instruktion som tar in en immediate imm mellan 0 och 2^4 - 1 och sätter nästa instruktion till (nuvarande + imm) eller (nuvarande - imm), beroende på om den 4:e biten är 0 (add) eller 1 (sub).
 - 111 If equal (jme): If equal är en instruktion som tar in ett register och ett register/immediate mellan 0 och 2^2 - 1, beroende på om den 4:e biten är 0 (add) eller 1 (sub), och hoppar över nästa instruktion om de har samma värde.
+
 - Kod exempel
     
     Om man vill addera 2 variabler kollar man först på operationens binära kod: 011 för add/sub. Sedan ser vi att vi måste ha en bit för addition eller subtration så vi lägger till en 0a för addition. Därefter lägger vi till binära koden för de olika variablerna. a + b skulle därmed se ut så här: 011 0 00 01 som skrivs om till 0110 0001 för att lättare översättas till hexadeciamal (6 1). Sist görs de hexadecimala tecknena om till morse kod (-.... .----).
