@@ -1,17 +1,10 @@
-# Funny language
+# reMorse
 
-Först och främst måste man veta att varje instruktion är uppdelade i 2 morse kod commands där varje 
-command står för ett hexadecimalt nummer mellan 0 och F.
+reMorse är ett språk med 8-bitars instruktioner och 32-bitars register som är skrivet likt ett assembly-språk i grunden, representerat som morsekod (eller punktskrift) i text- eller ljudform. Varje instruktion representeras internt av en 8-bitars binär sträng, vilket motsvarar 2 hexadecimala siffror i morseform.
 
-2 hexadecimala tecken blir 8 binära tecken, alltså 8 bitar som vi var begränsade till. 
-Eftersom våra operation endast var 3 bitar blir det första morse kod tecknet annorlunda beroende på 
-vad som skrivs efter, vilken variabel man använder till exempel, eftersom det krävs 4 bitar för varje morse kod tecken.
-De tre första bitarna är alltid avsett till vilken operation man gör.
+## Konverteringstabell mellan register och deras binära representationer
 
-
-## De olika variablerna och deras binära form
-
-| registry | binary |
+| Register | Binärt |
 |----------|--------|
 | a        | 00     |
 | b        | 01     |
@@ -19,18 +12,18 @@ De tre första bitarna är alltid avsett till vilken operation man gör.
 | d        | 11     |
 
 
-## Konverteringstabell mellan assemblyish och binära instruktioner
+## Konverteringstabell mellan instruktioner och dess binära representationer
 
-| Bits | Code | Name    | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   |
-|------|------|---------|-----|-----|-----|-----|-----|-----|-----|-----|
-| 5    | 000  | inp     | op  | op  | op  | var | var |     |     |     |
-| 5    | 001  | out     | op  | op  | op  | var | var |     |     |     |
-| 3    | 010  | end     | op  | op  | op  |     |     |     |     |     |
-| 8    | 011  | add/sub | op  | op  | op  | sgn | var | var | var | var |
-| 8    | 100  | addi    | op  | op  | op  | var | var | imm | imm | imm |
-| 8    | 101  | subi    | op  | op  | op  | var | var | imm | imm | imm |
-| 8    | 110  | jmp     | op  | op  | op  | sgn | imm | imm | imm | imm |
-| 8    | 111  | jme     | op  | op  | op  | i/v | var | var | i/v | i/v |
+| Bitar | Kod  | Namn    | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   |
+|-------|------|---------|-----|-----|-----|-----|-----|-----|-----|-----|
+| 5     | 000  | inp     | op  | op  | op  | var | var |     |     |     |
+| 5     | 001  | out     | op  | op  | op  | var | var |     |     |     |
+| 3     | 010  | end     | op  | op  | op  |     |     |     |     |     |
+| 8     | 011  | add/sub | op  | op  | op  | sgn | var | var | var | var |
+| 8     | 100  | addi    | op  | op  | op  | var | var | imm | imm | imm |
+| 8     | 101  | subi    | op  | op  | op  | var | var | imm | imm | imm |
+| 8     | 110  | jmp     | op  | op  | op  | sgn | imm | imm | imm | imm |
+| 8     | 111  | jme     | op  | op  | op  | i/v | var | var | i/v | i/v |
 
 Nedan är alla operationer, vad de gör och vad mer man behöver skriva efter operationen.
 
@@ -85,6 +78,6 @@ Nedan är alla operationer, vad de gör och vad mer man behöver skriva efter op
     De sista 2 bitarna är antingen en variabel eller en siffra mellan 0 och 3. 
 
 
-Kod exempel
+- Kod exempel
     
     Om man vill addera 2 variabler kollar man först på operationens binära kod: 011 för add/sub. Sedan ser vi att vi måste ha en bit för addition eller subtration så vi lägger till en 0a för addition. Därefter lägger vi till binära koden för de olika variablerna. a + b skulle därmed se ut så här: 011 0 00 01 som skrivs om till 0110 0001 för att lättare översättas till hexadeciamal (6 1). Sist görs de hexadecimala tecknena om till morse kod (-.... .----).

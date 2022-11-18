@@ -18,7 +18,7 @@ from morse_audio_decoder.morse import MorseCode
 #6 110 jmp                    3bit op + 1bit (+/-)     + 4bit (15)             8bit
 #7 111 jme                    3bit op + 1bit (imm/var) + 2bit var  + 2bit      8bit
 
-register = {'a': 0, 'b': 0, 'c': 0, 'd': 0}
+register = {'a': int(), 'b': int(), 'c': int(), 'd': int()}
 regBin = ['a', 'b', 'c', 'd']
 opBin = ["inp", "out", "end", "add/sub", "addi", "subi", "jmp", "jme"]
 
