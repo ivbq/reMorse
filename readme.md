@@ -2,6 +2,10 @@
 
 reMorse är ett språk med 8-bitars instruktioner och 32-bitars register som är skrivet likt ett assembly-språk i grunden, representerat som morsekod (eller punktskrift) i text- eller ljudform. Varje instruktion representeras internt av en 8-bitars binär sträng, vilket motsvarar 2 hexadecimala siffror i morseform.
 
+## Installering
+
+Använd pip för att installera morse-audio-decoder. Hitta länken själv, är lat.
+
 ## Instruktioner
 
 - 000 Input (inp): Input är en instruktion som tar in en integer från IO och sparar den i given variabel.
